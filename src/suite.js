@@ -10,16 +10,25 @@ const getTarget = require("./cli-flags-helper").getTarget;
 // and specify 'minSamples' as 20 to have it collect exactly 20
 // samples. We leave the 'initCount' to the default of 1. See
 // https://github.com/v8/web-tooling-benchmark/issues/6 for details.
-const defaultOptions = {
-  maxTime: 0,
-  minSamples: 20
-};
+function MyOption() {
+  var cycleIndex = 0;
+  return {
+    maxTime: 0,
+    minSamples: 20,
+    onStart: function(event) {
+      console.log("Start");
+    },
+    onCycle: function(event) {
+      console.log("Cycle", ++cycleIndex, event.target.times.cycle);
+    }
+  };
+}
 
 const suite = new Benchmark.Suite();
 
 getTarget().forEach(target => {
   suite.add(
-    Object.assign({}, require(`./${target}-benchmark`), defaultOptions)
+    Object.assign({}, require(`./${target}-benchmark`), new MyOption())
   );
 });
 
