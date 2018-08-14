@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-const Benchmark = require("benchmark");
+const Benchmark = require("../benchmark");
 const getTarget = require("./cli-flags-helper").getTarget;
 
 // We need to run deterministically, so we set 'maxTime' to 0, which
@@ -20,6 +20,9 @@ function MyOption() {
     },
     onCycle: function(event) {
       console.log("Cycle", ++cycleIndex, event.target.times.cycle);
+    },
+    onComplete: function(event) {
+      console.log("History", event.target.stats_history);
     }
   };
 }
